@@ -4,37 +4,39 @@ import java.util.Scanner;
 public class TowersOfHanoi {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int num2 = rings();
-        int[][] arr = new int[num2][3];
+        int rings = rings();
+        int[][] arr = new int[rings][3];
         //заполнение массива
-        for (int i = 0; i < num2; i++) {
+        for (int i = 0; i < rings; i++) {
             arr[i][0] = i + 1;
         }
-        mode(arr, num2);
-
-
+        mode(arr, rings);
     }
 
 
     // выбор режима
-    private static void mode(int[][] arr, int num2) {
+    private static void mode(int[][] arr, int rings) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите режим ");
         System.out.println("Ручной или автоматический(1-ручной, 2-автоматический)");
         int num1 = scanner.nextInt();
         if (num1 == 1) {
             System.out.println("Выбран ручной режим");
-           while (win(arr, num2))
-            modManual(arr, num2);
+            num1 = 0;
+            while (win(arr, rings)) {
+                modManual(arr, rings, num1);
+            }
+            printSticks(arr, rings);
         } else if (num1 == 2) {
             System.out.println("Выбран автоматический режим");
-            while (win(arr, num2))
-            modAuto(arr);
+            while (win(arr, rings))
+                modAuto(arr);
         } else {
             System.out.println("Выбран не тот режим ");
-            mode(arr, num2);
+            mode(arr, rings);
         }
     }
+
 
     //авто режим
     private static void modAuto(int[][] arr) {
@@ -44,47 +46,67 @@ public class TowersOfHanoi {
 
 
     //выйгрыш
-    private static boolean win(int[][] arr,int num2){
-        for (int i = 0; i < num2; i++) {
-            if (arr[0][2]==0){
+    private static boolean win(int[][] arr, int rings) {
+        for (int i = 0; i < rings; i++) {
+            if (arr[0][2] == 0) {
                 return true;
-            }else
+            } else {
                 System.out.println("Победа");
                 return false;
+            }
         }
         return false;
     }
 
-    //ручной режим
-    private static void modManual(int[][] arr, int num2) {
+
+    //ручной режим modManual(arr, num2);
+    private static void modManual(int[][] arr, int rings, int num1) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите откуда и куда переместь");
-        printSticks(arr, num2);
+        printSticks(arr, rings);
         System.out.println("Пример:");
         System.out.println("1 3");
-
-        int num1 = scanner.nextInt() - 1;
-        int num3 = scanner.nextInt() - 1;
-        for (int i = 0; i < num2; i++) {
-            if (arr[num2 - i - 1][num3] == 0) {
-                for (int j = 0; j < num2; j++) {
-                    if (arr[j][num1] != 0) {
-                        arr[num2 - i - 1][num3] = arr[j][num1];
-                        break;
-                    }
-                }
+        System.out.println("Где 1 = стержень откуда, а 3 = стержень куда");
+        int rodIn = scanner.nextInt() - 1;
+        int rodOut = scanner.nextInt() - 1;
+        int var = 0;
+        int varI = 0;
+        num1++;
+        System.out.println("Количество ходов = " + num1);
+        if (rodIn > 4 || rodOut > 4 || rodOut < 0 || rodIn < 0) {
+            System.out.println("Неверный стержень");
+            System.out.println("От 1 до 3 включительно");
+            return;
+        }
+        if (arr[rings - 1][rodIn] == 0) {
+            System.out.println("Пустой стержень");
+            return;
+        }
+        for (int i = 0; i < rings; i++) {
+            if (arr[i][rodIn] != 0) {
+                var = arr[i][rodIn];
+                varI = i;
                 break;
             }
         }
-        for (int i = 0; i < num2; i++) {
-            if (arr[i][num1] != 0) {
-                arr[i][num1] = 0;
-                break;
+        if (arr[rings - 1][rodOut] == 0) {
+            arr[rings - 1][rodOut] = var;
+            arr[varI][rodIn] = 0;
+            return;
+        }
+        for (int i = 0; i < rings - 1; i++) {
+            if (arr[rings - 2 - i][rodOut] == 0 && arr[rings - 1][rodOut] > var) {
+                arr[rings - 2 - i][rodOut] = var;
+                arr[varI][rodIn] = 0;
+                return;
             }
         }
-        printSticks(arr, num2);
-
-
+        for (int i = 0; i < rings - 1; i++) {
+            if (arr[rings - 2 - i][rodOut] == 0 && arr[rings - 1][rodOut] < var) {
+                System.out.println("Невозможно");
+                return;
+            }
+        }
     }
 
 
@@ -93,9 +115,9 @@ public class TowersOfHanoi {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите количество колец");
         System.out.println("Минимум - 3, максимум - 8");
-        int num2 = scanner.nextInt();
-        if (num2 >= 3 && num2 <= 8) {
-            return num2;
+        int rings = scanner.nextInt();
+        if (rings >= 3 && rings <= 8) {
+            return rings;
         } else {
             System.out.println("Введено не верное количество колец");
             rings();
@@ -103,9 +125,10 @@ public class TowersOfHanoi {
         return 1;
     }
 
-    // вывод палок
-    private static void printSticks(int[][] arr, int num2) {
-        for (int i = 0; i < num2; i++) {
+
+    // вывод палок      printSticks(arr, num2);
+    private static void printSticks(int[][] arr, int rings) {
+        for (int i = 0; i < rings; i++) {
             for (int j = 0; j < 3; j++)
                 if (arr[i][j] == 0) {
                     System.out.print("* ");
@@ -115,3 +138,4 @@ public class TowersOfHanoi {
         }
     }
 }
+
