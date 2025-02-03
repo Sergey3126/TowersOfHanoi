@@ -13,10 +13,6 @@ public class Rules {
             System.out.println("От 1 до 3 включительно");
             return;
         }
-        if (arr[rings - 1][rodIn] == 0) {
-            System.out.println("Пустой стержень");
-            return;
-        }
         for (int i = 0; i < rings; i++) {
             if (arr[i][rodIn] != 0) {
                 var = arr[i][rodIn];
@@ -36,14 +32,24 @@ public class Rules {
                 return;
             }
         }
-        for (int i = 0; i < rings - 1; i++) {
-            if (arr[rings - 2 - i][rodOut] == 0 && arr[rings - 1][rodOut] < var) {
+
+            if (checkProgress(arr, rings, rodOut, var,rodIn)) {
                 System.out.println("Невозможно");
                 return;
-            }
+
         }
     }
 
+
+    //проверка на возможность хода
+   public static boolean checkProgress(int[][] arr,int rings,int rodOut,int var,int rodIn){
+       for (int i = 0; i < rings - 1; i++) {
+           if (arr[rings - 2 - i][rodOut] == 0 && arr[rings - 1][rodOut] < var||arr[rings - 1][rodIn] == 0) {
+               return true;
+           }
+       }
+       return false;
+   }
 
     //выйгрыш
     public static boolean win(int[][] arr, int rings, int num1) {
@@ -61,18 +67,6 @@ public class Rules {
     }
 
 
-    //ручной режим modManual(arr, num2);
-    public static void modManual(int[][] arr, int rings) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите откуда и куда переместь");
-        GameCreation.printSticks(arr, rings);
-        System.out.println("Пример:");
-        System.out.println("1 3");
-        System.out.println("Где 1 = стержень откуда, а 3 = стержень куда");
-        int rodIn = scanner.nextInt() ;
-        int rodOut = scanner.nextInt() ;
-        Rules.moves(arr,rodIn,rodOut,rings);
-    }
 
 
 }
