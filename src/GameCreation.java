@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class GameCreation {
@@ -15,7 +16,8 @@ public class GameCreation {
             System.out.println("Введено не верное количество колец");
             rings();
         }
-        return 1;
+        return 0;
+
     }
 
 
@@ -34,9 +36,28 @@ public class GameCreation {
 
     //авто режим
     public static void modAuto(int[][] arr, int rings) {
-}
+        Random random = new Random();
+        int randomNumber = random.nextInt(3);
+        int rodIn = randomNumber + 1;
+        int randomNumber2 = random.nextInt(3);
+        int rodOut = randomNumber2 + 1;
+        Rules.moves(arr,rodIn,rodOut,rings);
+        System.out.println();
+    }
 
 
+    //ручной режим modManual(arr, num2);
+    public static void modManual(int[][] arr, int rings) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Выберите откуда и куда переместь");
+        GameCreation.printSticks(arr, rings);
+        System.out.println("Пример:");
+        System.out.println("1 3");
+        System.out.println("Где 1 = стержень откуда, а 3 = стержень куда");
+        int rodIn = scanner.nextInt() ;
+        int rodOut = scanner.nextInt() ;
+        Rules.moves(arr,rodIn,rodOut,rings);
+    }
 
 
     // выбор режима
@@ -47,42 +68,20 @@ public class GameCreation {
         int num1 = scanner.nextInt();
         if (num1 == 1) {
             System.out.println("Выбран ручной режим");
-            num1 = 0;
-            while (Rules.win(arr, rings, num1)) {
+            num1=0;
+            while (Rules.win(arr, rings,num1)) {
                 num1++;
                 modManual(arr, rings);
             }
         } else if (num1 == 2) {
             System.out.println("Выбран автоматический режим");
-            num1 = 0;
-            while (Rules.win(arr, rings, num1)) {
+            num1=0;
+            while (Rules.win(arr, rings,num1)){
                 num1++;
-                modAuto(arr, rings);
-            }
+                modAuto(arr, rings);}
         } else {
             System.out.println("Выбран не тот режим ");
             mode(arr, rings);
         }
     }
-
-
-    //ручной режим modManual(arr, num2);
-    public static void modManual(int[][] arr, int rings) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите откуда и куда переместь");
-        System.out.println("Для выхода введите 0");
-        GameCreation.printSticks(arr, rings);
-        System.out.println("Пример:");
-        System.out.println("1 3");
-        System.out.println("Где 1 = стержень откуда, а 3 = стержень куда");
-        int rodIn = scanner.nextInt() ;
-        if (rodIn==0){
-            System.out.println("Выход");
-            return;
-        }
-        int rodOut = scanner.nextInt() ;
-        Rules.moves(arr,rodIn,rodOut,rings);
-    }
-
-
 }
